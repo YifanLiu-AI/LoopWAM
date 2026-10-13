@@ -197,7 +197,18 @@ bash rollout_collect/collect_pi05.sh task_list.txt rollout_data/pi05
 bash rollout_collect/collect_xvla.sh task_list.txt rollout_data/xvla
 ```
 
-`rollout_collect/convert_robotwin_to_lerobot.py` turns those HDF5 episodes into the LeRobot layout used by mixed training.
+`rollout_collect/convert_robotwin_to_lerobot.py` turns those HDF5 episodes into the FastWAM / LeRobot v2.1 layout used by mixed training (`meta/`, `data/chunk-*`, `videos/chunk-*`). Run it from this repo so `src/fastwam` is importable:
+
+```bash
+python rollout_collect/convert_robotwin_to_lerobot.py \
+  --source-root ./rollout_data/pi05 \
+  --output-dir ./data/robotwin2_0-ours/lerobot_format_new/pi05_processed_stitched \
+  --task-configs demo_clean demo_randomized
+
+# Optional: --resume, --tasks <names...>, --merge-parts <shard_a> <shard_b>, --video-codec h264
+```
+
+Details and flags are in `rollout_collect/README.md`.
 
 Before the first training run, cache umT5 embeddings for the task prompts:
 

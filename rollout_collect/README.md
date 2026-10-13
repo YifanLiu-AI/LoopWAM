@@ -72,10 +72,44 @@ FastWAM loads `$FASTWAM_ROOT/experiments/robotwin/fastwam_policy` through `PYTHO
 
 ## Conversion
 
-After HDF5 rollouts are written, convert them to the LeRobot layout used by mixed-quality training:
+After HDF5 rollouts are written, convert them to the FastWAM / LeRobot v2.1 layout used by mixed-quality training with `convert_robotwin_to_lerobot.py`.
 
-```bash
-python /path/to/rollout_collect/convert_robotwin_to_lerobot.py ...
+Source (RoboTwin collect output):
+
+```text
+<source_root>/<task>/<task_config>/data/episode*.hdf5
+<source_root>/<task>/<task_config>/scene_info.json
+<source_root>/<task>/<task_config>/instructions/episode*.json   # optional
 ```
 
-See the script’s `--help` output for the full argument list.
+Target:
+
+```text
+<output_dir>/meta/{info.json,episodes.jsonl,tasks.jsonl,stats.json}
+<output_dir>/data/chunk-*/episode_*.parquet
+<output_dir>/videos/chunk-*/observation.images.*/episode_*.mp4
+```
+
+Run from a LoopWAM checkout (the script imports `fastwam` under `src/`):
+
+```bash
+# Example: convert π0.5 HDF5 rollouts
+python rollout_collect/convert_robotwin_to_lerobot.py \
+  --source-root ./rollout_data/pi05 \
+  --output-dir ./data/robotwin2_0-ours/lerobot_format_new/pi05_processed_stitched \
+  --task-configs demo_clean demo_randomized \
+  --fps 50
+
+# Resume into an existing output tree
+python rollout_collect/convert_robotwin_to_lerobot.py \
+  --source-root ./rollout_data/pi05 \
+  --output-dir ./data/.../pi05_processed_stitched \
+  --resume
+
+# Merge already-converted LeRobot shards
+python rollout_collect/convert_robotwin_to_lerobot.py \
+  --merge-parts ./part_a ./part_b \
+  --output-dir ./data/.../merged
+```
+
+Useful flags: `--tasks` (subset of task folder names), `--video-codec` (`libsvtav1` / `h264` / `hevc` / `h264_nvenc`), `--language-num`, `--seed`. See `--help` for the full list.

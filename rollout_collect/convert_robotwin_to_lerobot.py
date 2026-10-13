@@ -12,10 +12,10 @@ Target layout matches ``data/robotwin2_0-fastwam/robotwin2_0``:
   videos/chunk-*/observation.images.*/episode_*.mp4
 
 Example:
-  python scripts/convert_robotwin_to_lerobot.py \\
-    --source-root ./data/robotwin2_0-ours/5task \\
-    --output-dir ./data/robotwin2_0-fastwam/robotwin2_0_ours \\
-    --task-config demo_clean
+  python rollout_collect/convert_robotwin_to_lerobot.py \\
+    --source-root ./rollout_data/pi05 \\
+    --output-dir ./data/robotwin2_0-ours/lerobot_format_new/pi05_processed_stitched \\
+    --task-configs demo_clean demo_randomized
 """
 
 from __future__ import annotations
