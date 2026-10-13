@@ -18,6 +18,24 @@ Expert demonstrations show a robot how to succeed. Deployment shows what happens
 
 These are the best overall numbers among the methods compared in the submitted paper. No extra embodied-data pretraining is used on RoboTwin 2.0 or RoboCasa365. The video backbone is pretrained Wan2.2.
 
+## Contents
+
+- [Method](#method)
+- [Results](#results)
+  - [RoboTwin 2.0](#robotwin-20)
+  - [RoboCasa365](#robocasa365)
+  - [RoboChallenge Table30-V2](#robochallenge-table30-v2)
+- [Repository](#repository)
+- [Environment](#environment)
+- [Pretrained weights](#pretrained-weights)
+- [Dataset](#dataset)
+  - [RoboTwin 2.0](#robotwin-20-1)
+  - [Real robots (Table30-V2)](#real-robots-table30-v2)
+- [Training](#training)
+- [RoboTwin 2.0 evaluation](#robotwin-20-evaluation)
+- [RoboCasa365 evaluation](#robocasa365-evaluation)
+- [RoboChallenge evaluation](#robochallenge-evaluation)
+
 ## Method
 
 LoopWAM jointly denoises future video and actions. Bidirectional attention connects the two streams at every layer, so learned action consequences can inform control. Both streams are conditioned on the instruction and on trajectory quality. At deployment, an expert-quality target steers the policy.
