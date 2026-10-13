@@ -91,6 +91,21 @@ def build_xvla(
     return Launch(cmd=cmd, env=_base_env(gpu, robotwin_root), cwd=robotwin_root)
 
 
+def resolve_pi05_python(robotwin_root: Path) -> str:
+    """Prefer policy/pi05/.venv (OpenPI/JAX) over the collector's interpreter.
+
+    setup_pi05.sh installs into that venv; conda/fastwam usually lacks jax.
+    Override with PI05_PYTHON=/path/to/python.
+    """
+    override = os.environ.get("PI05_PYTHON", "").strip()
+    if override:
+        return override
+    venv_py = robotwin_root / "policy" / "pi05" / ".venv" / "bin" / "python"
+    if venv_py.is_file() and os.access(venv_py, os.X_OK):
+        return str(venv_py)
+    return sys.executable
+
+
 def build_pi05(
     *,
     robotwin_root: Path,
@@ -119,8 +134,9 @@ def build_pi05(
         raise FileNotFoundError(f"pi05 deploy config not found: {config}")
     env = _base_env(gpu, robotwin_root)
     env.setdefault("XLA_PYTHON_CLIENT_MEM_FRACTION", "0.4")
+    pi05_python = resolve_pi05_python(robotwin_root)
     cmd = [
-        sys.executable,
+        pi05_python,
         str(entry),
         "--config",
         str(config),
