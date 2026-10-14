@@ -2,7 +2,7 @@
 
 **Closed-loop generalist policy improvement from deployment rollouts.**
 
-[Project page](https://loopwam.github.io/) · [arXiv](https://arxiv.org/pdf/2610.18873)
+[Project page](https://loop-wam.github.io/) · [arXiv](https://arxiv.org/pdf/2610.18873)
 
 <p align="center">
   <img src="assets/01_teaser_渐变优化版.gif" alt="LoopWAM self-improvement loop: deploy, collect mixed-quality rollouts, and improve through quality-aware learning." width="820">
