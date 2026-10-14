@@ -2,10 +2,10 @@
 
 **Closed-loop generalist policy improvement from deployment rollouts.**
 
-[Project page](https://loopwam.github.io/) · [arXiv](https://arxiv.org/abs/XXXX.XXXXX)
+[Project page](https://loopwam.github.io/) · [arXiv](https://arxiv.org/pdf/2610.18873)
 
 <p align="center">
-  <img src="https://loopwam.github.io/assets/branding/teaser.webp" alt="LoopWAM self-improvement loop: deploy, collect mixed-quality rollouts, and improve through quality-aware learning." width="820">
+  <img src="assets/01_teaser_渐变优化版.gif" alt="LoopWAM self-improvement loop: deploy, collect mixed-quality rollouts, and improve through quality-aware learning." width="820">
 </p>
 
 Expert demonstrations show a robot how to succeed. Deployment shows what happens when it does not. LoopWAM learns from that full mixture: successful, suboptimal, and failed rollouts from itself and from other deployed policies. World-model supervision stays on for every trajectory. Action imitation is weighted by trajectory quality, and failed rollouts contribute no direct action-imitation loss.
@@ -41,7 +41,7 @@ These are the best overall numbers among the methods compared in the submitted p
 LoopWAM jointly denoises future video and actions. Bidirectional attention connects the two streams at every layer, so learned action consequences can inform control. Both streams are conditioned on the instruction and on trajectory quality. At deployment, an expert-quality target steers the policy.
 
 <p align="center">
-  <img src="https://loopwam.github.io/assets/figures/method.webp" alt="Mixed-quality data trains video and action branches through joint attention, source-dependent noise, quality-weighted supervision, and quality steering." width="820">
+  <img src="assets/02_method_权重条优化版.gif" alt="Mixed-quality data trains video and action branches through joint attention, source-dependent noise, quality-weighted supervision, and quality steering." width="820">
 </p>
 
 ## Results
