@@ -1,14 +1,23 @@
-# LoopWAM
+<h1 align="center">
+  <img src="assets/readme/loopwam.svg" alt="LoopWAM" width="390">
+</h1>
 
-**Closed-loop generalist policy improvement from deployment rollouts.**
+<h3 align="center">
+  Closed-loop generalist policy improvement<br>
+  from deployment rollouts.
+</h3>
 
-[Project page](https://loop-wam.github.io/) · [arXiv](https://arxiv.org/pdf/2610.18873)
+<p align="center">
+  <a href="https://loop-wam.github.io/"><img src="assets/readme/project-page.svg" alt="Project page" width="148" height="40"></a>
+  &nbsp;
+  <a href="https://arxiv.org/pdf/2610.18873"><img src="assets/readme/arxiv.svg" alt="Read the paper on arXiv" width="112" height="40"></a>
+</p>
 
 <p align="center">
   <img src="assets/01_teaser_渐变优化版.gif" alt="LoopWAM self-improvement loop: deploy, collect mixed-quality rollouts, and improve through quality-aware learning." width="820">
 </p>
 
-Expert demonstrations show a robot how to succeed. Deployment shows what happens when it does not. LoopWAM learns from that full mixture: successful, suboptimal, and failed rollouts from itself and from other deployed policies. World-model supervision stays on for every trajectory. Action imitation is weighted by trajectory quality, and failed rollouts contribute no direct action-imitation loss.
+LoopWAM turns real-world experience into better robot policies. By learning from successful, suboptimal, and failed rollouts alongside expert demonstrations, it closes the loop between deployment and improvement.
 
 | Benchmark | Setting | LoopWAM |
 | --- | --- | --- |
@@ -16,10 +25,23 @@ Expert demonstrations show a robot how to succeed. Deployment shows what happens
 | [RoboCasa365](https://loopwam.github.io/) | 50 tasks, seen and unseen compositions | **49.5%** overall success |
 | [RoboChallenge Table30-V2](https://loopwam.github.io/) | 30 real tasks, 4 embodiments | **43.33%** success, **56.80** score |
 
-These are the best overall numbers among the methods compared in the submitted paper. No extra embodied-data pretraining is used on RoboTwin 2.0 or RoboCasa365. The video backbone is pretrained Wan2.2.
+No extra embodied-data pretraining is used on any of the three benchmarks, covering both simulation and real-world robots.
 
-## Contents
+<a id="highlights"></a>
 
+## ✨ Highlights
+
+- **SOTA performance across simulation and real-world benchmarks.** LoopWAM achieves SOTA results on **RoboChallenge Table30-V2**, **RoboTwin 2.0**, and **RoboCasa365**.
+
+- **Training on non-NVIDIA GPU.** All LoopWAM models reported across the three benchmarks are trained on **Alibaba Cloud PPU-810E**.
+
+- **Nearly 2× the training speed of the FastWAM codebase.** Building on FastWAM's dataloader, we preprocess videos before training, stitching camera views and resizing them to the training resolution to make video decoding more efficient during data loading. We also optimize video decoding around the frames sampled for each training chunk. These optimizations reduce training time from **70+ hours to 40 hours**.
+
+<a id="contents"></a>
+
+## 📑 Contents
+
+- [Highlights](#highlights)
 - [Method](#method)
 - [Results](#results)
   - [RoboTwin 2.0](#robotwin-20)
@@ -36,7 +58,9 @@ These are the best overall numbers among the methods compared in the submitted p
 - [RoboCasa365 evaluation](#robocasa365-evaluation)
 - [RoboChallenge evaluation](#robochallenge-evaluation)
 
-## Method
+<a id="method"></a>
+
+## 🔬 Method
 
 LoopWAM jointly denoises future video and actions. Bidirectional attention connects the two streams at every layer, so learned action consequences can inform control. Both streams are conditioned on the instruction and on trajectory quality. At deployment, an expert-quality target steers the policy.
 
@@ -44,9 +68,13 @@ LoopWAM jointly denoises future video and actions. Bidirectional attention conne
   <img src="assets/02_method_权重条优化版.gif" alt="Mixed-quality data trains video and action branches through joint attention, source-dependent noise, quality-weighted supervision, and quality steering." width="820">
 </p>
 
-## Results
+<a id="results"></a>
 
-### RoboTwin 2.0
+## 🏆 Results
+
+<a id="robotwin-20"></a>
+
+### 🤖 RoboTwin 2.0
 
 50 bimanual tasks. Mixed expert–rollout training. Rollouts come from an expert-trained LoopWAM, X-VLA, and π0.5. Collection and evaluation use different random seeds.
 
@@ -55,10 +83,12 @@ LoopWAM jointly denoises future video and actions. Bidirectional attention conne
 | **LoopWAM** | No | **94.6** | **94.4** | **94.5** |
 | LingBot-VA 2.0 | Yes | 93.8 | 93.4 | 93.6 |
 | AHA-WAM | No | 93.4 | 92.2 | 92.8 |
-| Fast-WAM | No | 91.9 | 91.8 | 91.8 |
+| FastWAM | No | 91.9 | 91.8 | 91.8 |
 | π0.5 | Yes | 82.7 | 76.8 | 79.8 |
 
-### RoboCasa365
+<a id="robocasa365"></a>
+
+### 🏠 RoboCasa365
 
 All 16 Composite-Unseen tasks are held out of both expert data and rollout data. Overall success uses weights 18 / 16 / 16.
 
@@ -68,7 +98,9 @@ All 16 Composite-Unseen tasks are held out of both expert data and rollout data.
 | ABot-M0.6 | 79.4 | 48.3 | 7.9 | 46.6 |
 | PRTS | 66.3 | 30.3 | **18.8** | 39.6 |
 
-### RoboChallenge Table30-V2
+<a id="robochallenge-table30-v2"></a>
+
+### 🦾 RoboChallenge Table30-V2
 
 30 real-world tasks on [RoboChallenge](https://robochallenge.ai/home). One multi-task model per embodiment. Overall score uses task weights 10 / 10 / 7 / 3 for ALOHA, DOS-W1, ARX5, and UR5. How to submit a run is in [RoboChallenge evaluation](#robochallenge-evaluation).
 
@@ -97,7 +129,9 @@ Click a frame to play the clip. The full set is on the [project page](https://lo
 | --- | --- | --- | --- |
 | [![Overview](https://loopwam.github.io/assets/posters/overview.jpg)](https://loopwam.github.io/assets/videos/overview.mp4) | [![Thirty RoboChallenge rollouts](https://loopwam.github.io/assets/posters/rollout-30-tasks.jpg)](https://loopwam.github.io/assets/videos/rollout-30-tasks.mp4) | [![Shirt folding success](https://loopwam.github.io/assets/posters/folding/s1.jpg)](https://loopwam.github.io/assets/videos/folding/s1.mp4) | [![Shirt folding failure](https://loopwam.github.io/assets/posters/folding/f1.jpg)](https://loopwam.github.io/assets/videos/folding/f1.mp4) |
 
-## Repository
+<a id="repository"></a>
+
+## 🗂️ Repository
 
 | Path | What it is |
 | --- | --- |
@@ -121,7 +155,9 @@ Click a frame to play the clip. The full set is on the [project page](https://lo
 | `scripts/` | Training launcher (`train.py`, DeepSpeed / Accelerate configs) |
 | `src/` | Model and dataset code |
 
-## Environment
+<a id="environment"></a>
+
+## ⚙️ Environment
 
 Python 3.10 and PyTorch 2.7.1+cu128.
 
@@ -130,7 +166,9 @@ bash scripts/setup_env.sh
 conda activate loopwam
 ```
 
-## Pretrained weights
+<a id="pretrained-weights"></a>
+
+## 📦 Pretrained weights
 
 Training and inference both need Wan2.2-TI2V-5B under `checkpoints/`, plus the ActionDiT backbone interpolated from the Wan DiT. The script downloads the Wan files (ModelScope by default) and writes `checkpoints/ActionDiT_linear_interp_Wan22_alphascale_1024hdim.pt`.
 
@@ -143,9 +181,13 @@ DIFFSYNTH_DOWNLOAD_SOURCE=huggingface bash scripts/download_pretrained.sh
 
 Released LoopWAM checkpoints already live in `checkpoints/` next to that backbone. Training scripts set `DIFFSYNTH_MODEL_BASE_PATH` to this directory and skip a second download.
 
-## Dataset
+<a id="dataset"></a>
 
-### RoboTwin 2.0
+## 🗃️ Dataset
+
+<a id="robotwin-20-1"></a>
+
+### 🤖 RoboTwin 2.0
 
 Expert demos are generated with the official [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) data generator, then converted into the stitched LeRobot tree used for training. The three mixed-training rollout packages (FastWAM, π0.5, and X-VLA) are published under `data/robotwin2_0-ours/` on [loop-wam/loopwam](https://huggingface.co/datasets/loop-wam/loopwam).
 
@@ -221,7 +263,9 @@ torchrun --standalone --nproc_per_node=8 scripts/precompute_text_embeds.py \
   task=robotwin_quality_score_3low_1cam_stitched_384_1e-4_action_weighted
 ```
 
-### Real robots (Table30-V2)
+<a id="real-robots-table30-v2"></a>
+
+### 🦾 Real robots (Table30-V2)
 
 Real-robot training uses [RoboChallenge Table30-V2](https://robochallenge.ai/home). Raw exports are converted to LeRobot v2.1 with `third_party/table30_v2_convert/` (W1, ALOHA, ARX5, UR5). Details are in that directory's `README.md`.
 
@@ -244,7 +288,9 @@ Point `./converted_data` at the trees used by `train_table30_v2.sh` (or pass `CO
 CONVERTED_DATA=/path/to/converted bash scripts/prepare_data.sh real
 ```
 
-## Training
+<a id="training"></a>
+
+## 🚀 Training
 
 RoboTwin 2.0 defaults to 16 GPUs per node. RoboCasa365 uses `NPROC_PER_NODE` when it is set, otherwise the number of visible GPUs, and falls back to 16 only if that count cannot be detected. Real-robot scripts default to 8 GPUs.
 
@@ -277,7 +323,9 @@ RoboCasa365 uses expert demonstrations plus three rollout sources, quality-weigh
 
 Real-robot training uses RoboChallenge Table30-V2. The four embodiment rows above are those released checkpoints.
 
-## RoboTwin 2.0 evaluation
+<a id="robotwin-20-evaluation"></a>
+
+## 🧪 RoboTwin 2.0 evaluation
 
 Released weights: `checkpoints/robotwin/step_037645.pt` and `checkpoints/robotwin/dataset_stats.json` ([loop-wam/loopwam](https://huggingface.co/datasets/loop-wam/loopwam), about 12GB, no login). Reported result: clean **94.6%**, randomized **94.4%**, average **94.5%**, measured with the default `eval_robotwin.sh` setup on **8× A100**.
 
@@ -325,7 +373,9 @@ What that launch does:
 
 Results are written under `evaluate_results/robotwin/`. For `checkpoints/robotwin/step_037645.pt` the run directory is `evaluate_results/robotwin/step_037645/robotwin/step_037645/<timestamp>/`. The manager writes `manager.log`, `summary.csv`, `summary.json`, and `failed_tasks.txt`. Each task directory contains `_result_clean.txt` and `_result_random.txt`; the last number in each file is that phase's success rate. `summary.json` reports the mean of both phases. A worker failure stops the remaining tasks and records the return code in `failed_tasks.txt`.
 
-## RoboCasa365 evaluation
+<a id="robocasa365-evaluation"></a>
+
+## 🧪 RoboCasa365 evaluation
 
 RoboCasa365 is split across two processes. This repository serves the policy over HTTP. The simulator client lives under `third_party/RoboCasa365` (`robocasa` + `robosuite`); mesh assets are soft-linked.
 
@@ -369,7 +419,9 @@ GarnishPancake,ArrangeTea" \
 
 The client resumes from its log when the same `--run_name` is used again. Logs go to `third_party/RoboCasa365/logs/eval/<run_name>.log`. The older `experiments/robocasa/robocasa365_inference_client_pro.sh` path (external `/workspace/robocasa`) still works if you already use that layout.
 
-## RoboChallenge evaluation
+<a id="robochallenge-evaluation"></a>
+
+## 🧪 RoboChallenge evaluation
 
 Table30-V2 is evaluated on the real robots through [RoboChallenge](https://robochallenge.ai/home). Submit the request on that site. The client that talks to the robot is [RoboChallengeInference](https://github.com/RoboChallenge/RoboChallengeInference). It is not part of this repository. Implement `DummyPolicy` in that repo's `demo.py` so it loads one released checkpoint and returns a list of actions.
 
