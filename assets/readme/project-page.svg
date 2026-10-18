@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="148" height="40" viewBox="0 0 148 40" role="img" aria-labelledby="title desc">
+  <title id="title">Project page</title>
+  <desc id="desc">Visit the LoopWAM project website.</desc>
+  <rect x="0.75" y="0.75" width="146.5" height="38.5" rx="19.25" fill="#effafa" stroke="#009da6" stroke-width="1.5"/>
+  <g transform="translate(16 11)" fill="none" stroke="#009da6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="9" cy="9" r="8"/>
+    <ellipse cx="9" cy="9" rx="3.3" ry="8"/>
+    <path d="M1 9h16"/>
+  </g>
+  <text x="44" y="25.3" fill="#009da6" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="600">Project page</text>
+</svg>
