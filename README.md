@@ -379,9 +379,12 @@ Results are written under `evaluate_results/robotwin/`. For `checkpoints/robotwi
 
 ## 🧪 RoboCasa365 evaluation
 
-RoboCasa365 is split across two processes. This repository serves the policy over HTTP. The simulator client lives under `third_party/RoboCasa365` (`robocasa` + `robosuite`); mesh assets are soft-linked.
+RoboCasa365 is split across two processes. This repository serves the policy over HTTP. The simulator client lives under `third_party/RoboCasa365` (`robocasa` + `robosuite`); mesh assets are linked via soft links.
 
-The server reuses `task=robocasa365_join_mq_3rollout`, so the camera stitch, 11-dimensional action, and 14-dimensional state match training. `configs/sim_robocasa.yaml` loads the Wan2.2 text encoder and skips a fresh ActionDiT initialization; the trained `.pt` supplies the weights. Download the text encoder and the released RoboCasa365 checkpoint if they are not already under `checkpoints/`:
+The server reuses `task=robocasa365_join_mq_3rollout`, so the camera stitching, 11-dimensional action space, and 14-dimensional state representation are consistent with training. The configuration file `configs/sim_robocasa.yaml` loads the Wan2.2 text encoder and skips fresh ActionDiT initialization; the trained `.pt` checkpoint provides the model weights.
+
+If the text encoder and the released RoboCasa365 checkpoint are not already available under `checkpoints/`, download them with:
+
 
 ```bash
 bash scripts/download_pretrained.sh
