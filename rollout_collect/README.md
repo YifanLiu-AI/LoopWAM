@@ -1,6 +1,6 @@
 # Rollout Collection
 
-This directory is self-contained and may be copied out of the repository. Paths to RoboTwin, FastWAM, and X-VLA are supplied through environment variables; the scripts do not assume a fixed parent checkout.
+This directory is self-contained and may be copied out of the repository. Paths to RoboTwin, LoopWAM, and X-VLA are supplied through environment variables; the scripts do not assume a fixed parent checkout.
 
 Collection drives the simulator entry points listed below.
 
@@ -8,15 +8,15 @@ Collection drives the simulator entry points listed below.
 | --- | --- | --- |
 | xvla | `ROBOTWIN_ROOT`, `XVLA_REPO_ROOT`, `MODEL_PATH` | `$ROBOTWIN_ROOT/run_xvla.py` |
 | pi05 | `ROBOTWIN_ROOT` | `$ROBOTWIN_ROOT/script/eval_policy_gwx.py` (policy under `$ROBOTWIN_ROOT/policy/pi05`) |
-| fastwam | `ROBOTWIN_ROOT`, `FASTWAM_ROOT`, `CKPT` | Same eval script; policy under `$FASTWAM_ROOT/experiments/robotwin/fastwam_policy` |
+| loopwam | `ROBOTWIN_ROOT`, `FASTWAM_ROOT`, `CKPT` | Same eval script; policy under `$FASTWAM_ROOT/experiments/robotwin/fastwam_policy` |
 
 ## Environment
 
 - `ROBOTWIN_ROOT`: checkout of [loop-wam/Robotwin-Rollout](https://github.com/loop-wam/Robotwin-Rollout). It must include `envs/`, `task_config/`, `run_xvla.py`, and `script/eval_policy_gwx.py`.
-- `FASTWAM_ROOT`: FastWAM (or LoopWAM) root that contains `configs/sim_robotwin.yaml` and `experiments/robotwin/fastwam_policy`.
+- `FASTWAM_ROOT`: LoopWAM root that contains `configs/sim_robotwin.yaml` and `experiments/robotwin/fastwam_policy`.
 - `XVLA_REPO_ROOT`: X-VLA repository that provides the `models` package.
 - `MODEL_PATH`: X-VLA checkpoint directory.
-- `CKPT`: FastWAM checkpoint file (`.pt`).
+- `CKPT`: LoopWAM checkpoint file (`.pt`).
 
 Optional overrides:
 
@@ -50,12 +50,12 @@ git clone https://github.com/loop-wam/Robotwin-Rollout.git
 export ROBOTWIN_ROOT=$PWD/Robotwin-Rollout
 export XVLA_REPO_ROOT=/path/to/X-VLA
 export MODEL_PATH=/path/to/X-VLA-checkpoints
-export FASTWAM_ROOT=/path/to/FastWAM
+export FASTWAM_ROOT=/path/to/LoopWAM
 export CKPT=/path/to/ckpt.pt
 
 bash /path/to/rollout_collect/collect_xvla.sh task_list.txt rollout_data/xvla
 bash /path/to/rollout_collect/collect_pi05.sh task_list.txt rollout_data/pi05
-bash /path/to/rollout_collect/collect_fastwam.sh task_list.txt rollout_data/fastwam
+bash /path/to/rollout_collect/collect_loopwam.sh task_list.txt rollout_data/loopwam
 ```
 
 The Python entrypoint accepts the same environment variables:
@@ -63,16 +63,16 @@ The Python entrypoint accepts the same environment variables:
 ```bash
 python /path/to/rollout_collect/collect.py --policy xvla --task-list task_list.txt --save-root rollout_data/xvla
 python /path/to/rollout_collect/collect.py --policy pi05 --task-list task_list.txt --save-root rollout_data/pi05
-python /path/to/rollout_collect/collect.py --policy fastwam --task-list task_list.txt --save-root rollout_data/fastwam
+python /path/to/rollout_collect/collect.py --policy fastwam --task-list task_list.txt --save-root rollout_data/loopwam
 ```
 
 `--dry-run` prints the commands that would be executed without launching the simulator. If an individual task fails, collection continues with the remaining tasks and exits with a non-zero status at the end.
 
-FastWAM loads `$FASTWAM_ROOT/experiments/robotwin/fastwam_policy` through `PYTHONPATH` and does not create a symlink under RoboTwin `policy/`. By default every simulation step stores an observation frame. Pass `--skip-get-obs-within-replan` to observe only at replan boundaries.
+LoopWAM loads `$FASTWAM_ROOT/experiments/robotwin/fastwam_policy` through `PYTHONPATH` and does not create a symlink under RoboTwin `policy/`. By default every simulation step stores an observation frame. Pass `--skip-get-obs-within-replan` to observe only at replan boundaries.
 
 ## Conversion
 
-After HDF5 rollouts are written, convert them to the FastWAM / LeRobot v2.1 layout used by mixed-quality training with `convert_robotwin_to_lerobot.py`.
+After HDF5 rollouts are written, convert them to the LeRobot v2.1 layout used by mixed-quality training with `convert_robotwin_to_lerobot.py`.
 
 Source (RoboTwin collect output):
 
@@ -90,7 +90,7 @@ Target:
 <output_dir>/videos/chunk-*/observation.images.*/episode_*.mp4
 ```
 
-Run from a LoopWAM checkout (the script imports `fastwam` under `src/`):
+Run from a LoopWAM checkout (the script imports the package under `src/`):
 
 ```bash
 # Example: convert π0.5 HDF5 rollouts

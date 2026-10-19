@@ -6,7 +6,7 @@ train:
   _target_: fastwam.datasets.lerobot.robot_video_dataset.RobotVideoDataset
   dataset_dirs:
     - ./data/robotwin2_0_stitched
-    - ./data/robotwin2_0-ours/lerobot_format_new/fwam_processed_stitched
+    - ./data/robotwin2_0-ours/lerobot_format_new/loopwam_processed_stitched
     - ./data/robotwin2_0-ours/lerobot_format_new/pi05_processed_stitched
     - ./data/robotwin2_0-ours/lerobot_format_new/xvla_processed_stitched
   dataset_supervise_action:
@@ -69,7 +69,7 @@ train:
         size: [384, 320]
   text_embedding_cache_dir:
     - ./data/robotwin2_0-ours/text_embeds_cache/robotwin2_0_quality_score
-    - ./data/robotwin2_0-ours/text_embeds_cache/fwam_processed_new_quality_score
+    - ./data/robotwin2_0-ours/text_embeds_cache/loopwam_processed_new_quality_score
     - ./data/robotwin2_0-ours/text_embeds_cache/pi05_processed_quality_score
     - ./data/robotwin2_0-ours/text_embeds_cache/xvla_processed_quality_score
   context_len: 128

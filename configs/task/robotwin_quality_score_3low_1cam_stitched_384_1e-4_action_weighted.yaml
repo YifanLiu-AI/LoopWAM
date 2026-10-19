@@ -1,6 +1,6 @@
 # @package _global_
 #
-# Joint FastWAM + mixed-quality training with quality-weighted action supervision.
+# Joint LoopWAM + mixed-quality training with quality-weighted action supervision.
 # Run (example):
 #   python scripts/train.py task=robotwin_quality_score_3low_1cam_stitched_384_1e-4_action_weighted
 
