@@ -392,7 +392,7 @@ bash scripts/download_robocasa365.sh
 
 We recommend maintaining two separate Conda environments: one for the policy server and one for the simulator client.
 
-**Server**
+### Server
 For the server, you can directly use the existing `loopwam` environment. Install `Flask` if it is not already available:
 
 ```bash
@@ -408,7 +408,7 @@ bash eval_robocasa.sh serve
 # or: GPU_ID=0 PORT=7891 bash eval_robocasa.sh serve
 ```
 
-**Client**
+### Client
 For the client, you may follow the [official RoboCasa repository setup instructions](https://github.com/robocasa/robocasa). Alternatively, we recommend using the included `third_party` directory for a faster setup:
 
 ```bash
