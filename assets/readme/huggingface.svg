@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="168" height="40" viewBox="0 0 168 40" role="img" aria-labelledby="title desc">
+  <title id="title">Hugging Face</title>
+  <desc id="desc">LoopWAM models and data on Hugging Face.</desc>
+  <rect x="0.75" y="0.75" width="166.5" height="38.5" rx="19.25" fill="#fff8e8" stroke="#ff9d00" stroke-width="1.5"/>
+  <g transform="translate(16 10)" aria-hidden="true">
+    <circle cx="10" cy="10" r="9" fill="none" stroke="#ff9d00" stroke-width="1.5"/>
+    <circle cx="6.5" cy="8.5" r="1.2" fill="#ff9d00"/>
+    <circle cx="13.5" cy="8.5" r="1.2" fill="#ff9d00"/>
+    <path d="M5.5 13c1.4 2.2 3.2 3.2 4.5 3.2S13.1 15.2 14.5 13" fill="none" stroke="#ff9d00" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <text x="42" y="25.3" fill="#c2410c" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="600">Hugging Face</text>
+</svg>

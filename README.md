@@ -11,6 +11,8 @@
   <a href="https://loop-wam.github.io/"><img src="assets/readme/project-page.svg" alt="Project page" width="148" height="40"></a>
   &nbsp;
   <a href="https://arxiv.org/pdf/2610.18873"><img src="assets/readme/arxiv.svg" alt="Read the paper on arXiv" width="112" height="40"></a>
+  &nbsp;
+  <a href="https://huggingface.co/datasets/loop-wam/loopwam"><img src="assets/readme/huggingface.svg" alt="Hugging Face" width="168" height="40"></a>
 </p>
 
 <p align="center">
