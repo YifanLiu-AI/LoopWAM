@@ -385,35 +385,109 @@ The server reuses `task=robocasa365_join_mq_3rollout`, so the camera stitching, 
 
 If the text encoder and the released RoboCasa365 checkpoint are not already available under `checkpoints/`, download them with:
 
-
 ```bash
 bash scripts/download_pretrained.sh
 bash scripts/download_robocasa365.sh
 ```
 
-Link simulator assets once (paths are machine-local):
+We recommend maintaining two separate Conda environments: one for the policy server and one for the simulator client.
+
+**Server**
+For the server, you can directly use the existing `loopwam` environment. Install `Flask` if it is not already available:
 
 ```bash
-ASSET_SRC_ROOT=/path/to/robocasa_assets \
-ROBOSUITE_ASSET_SRC=/path/to/robosuite/robosuite/models/assets \
-  bash eval_robocasa.sh prepare
+conda activate loopwam
+pip install flask
 ```
 
-Start the policy server from the repository root (`+EVALUATION.quality_score=5` is the default). It listens on `0.0.0.0:7891` and answers `POST /process_frame` with an action chunk of length `num_frames - 1` (64 for this task).
+Start the policy server from the repository root. `+EVALUATION.quality_score=5` is the default setting. The server listens on `0.0.0.0:7891` and responds to `POST /process_frame` with an action chunk of length `num_frames - 1` (64 for this task).
 
 ```bash
+conda activate loopwam
 bash eval_robocasa.sh serve
 # or: GPU_ID=0 PORT=7891 bash eval_robocasa.sh serve
 ```
 
-On a machine with MuJoCo / Gymnasium, run the client. It sends three PNGs and the 14-dimensional state, converts the returned 11-dimensional action back to the 12-dimensional simulator action, and executes `--replan_steps` actions before asking for the next chunk. Change `--server_url` to the host that is serving the policy.
+**Client**
+For the client, you may follow the [official RoboCasa repository setup instructions](https://github.com/robocasa/robocasa). Alternatively, we recommend using the included `third_party` directory for a faster setup:
 
 ```bash
+conda create -n robocasa365 python=3.11 -y
+conda activate robocasa365
+
+python -m pip install -e third_party/RoboCasa365/robosuite
+python -m pip install -e third_party/RoboCasa365/robocasa
+
+apt-get update
+apt-get install -y libegl1 libopengl0 libgl1
+```
+
+To run the simulator properly, you also need to download two asset packages: `robocasa_assets` and `robosuite_assets`. The assets are available at: [RoboCasa365 dataset on Hugging Face](https://huggingface.co/datasets/loop-wam/loopwam/tree/main/robocasa365).
+After downloading and extracting the asset archives, create the required soft links with:
+
+```bash
+ROBOCASA_ASSETS_SRC=/path/to/robocasa_assets \
+ROBOSUITE_ASSETS_SRC=/path/to/robosuite_assets \
+bash eval_robocasa.sh prepare
+```
+
+For single-GPU evaluation, we split the three RoboCasa365 task suites, `atomic`, `seen`, and `unseen`, into six groups. Each group uses one policy server.
+The client sends three PNG images and the 14-dimensional state to the server, converts the returned 11-dimensional action back into the 12-dimensional simulator action, and executes `--replan_steps` actions before requesting the next action chunk.
+Make sure to update `--server_url` according to the actual address of your running policy server.
+
+Atomic18 Group 1
+```bash
 bash eval_robocasa.sh client \
-  --task_groups "RecycleBottlesByType,WaffleReheat;\
-ArrangeBreadBasket,WeighIngredients;\
-BreadSelection,CuttingToolSelection;\
-GarnishPancake,ArrangeTea" \
+  --task_groups "CloseBlenderLid,CloseFridge;CloseToasterOvenDoor,CoffeeSetupMug;NavigateKitchen,OpenCabinet;OpenDrawer,OpenStandMixerHead" \
+  --server_url http://127.0.0.1:7891 \
+  --split pretrain \
+  --replan_steps 48 \
+  --num_trials 50 \
+  --save_video_every 0 \
+  --run_name robocasa365_eval_atomic1
+```
+
+Atomic18 Group 2
+```bash
+bash eval_robocasa.sh client \
+  --task_groups "PickPlaceCounterToCabinet,PickPlaceCounterToStove;PickPlaceDrawerToCounter,PickPlaceSinkToCounter;PickPlaceToasterToCounter,SlideDishwasherRack,TurnOnSinkFaucet;TurnOffStove,TurnOnElectricKettle,TurnOnMicrowave" \
+  --server_url http://127.0.0.1:7891 \
+  --split pretrain \
+  --replan_steps 48 \
+  --num_trials 50 \
+  --save_video_every 0 \
+  --run_name robocasa365_eval_atomic2
+```
+
+Seen16 Group 1
+```bash
+bash eval_robocasa.sh client \
+  --task_groups "StackBowlsCabinet,PreSoakPan;ScrubCuttingBoard,WashLettuce;RinseSinkBasin,KettleBoiling;LoadDishwasher,StoreLeftoversInBowl" \
+  --server_url http://127.0.0.1:7891 \
+  --split pretrain \
+  --replan_steps 48 \
+  --num_trials 50 \
+  --save_video_every 0 \
+  --run_name robocasa365_eval_seen1
+```
+
+
+Seen16 Group 2
+```bash
+bash eval_robocasa.sh client \
+  --task_groups "SetUpCuttingStation,StirVegetables;SteamInMicrowave,SearingMeat;PackIdenticalLunches,PrepareCoffee;DeliverStraw,GetToastedBread" \
+  --server_url http://127.0.0.1:7891 \
+  --split pretrain \
+  --replan_steps 48 \
+  --num_trials 50 \
+  --save_video_every 0 \
+  --run_name robocasa365_eval_seen2
+```
+
+Unseen16 Group 1
+```bash
+bash eval_robocasa.sh client \
+  --task_groups "RecycleBottlesByType,WaffleReheat;ArrangeBreadBasket,WeighIngredients;BreadSelection,CuttingToolSelection;GarnishPancake,ArrangeTea" \
   --server_url http://127.0.0.1:7891 \
   --split pretrain \
   --replan_steps 48 \
@@ -422,7 +496,21 @@ GarnishPancake,ArrangeTea" \
   --run_name robocasa365_eval_unseen1
 ```
 
-The client resumes from its log when the same `--run_name` is used again. Logs go to `third_party/RoboCasa365/logs/eval/<run_name>.log`. The older `experiments/robocasa/robocasa365_inference_client_pro.sh` path (external `/workspace/robocasa`) still works if you already use that layout.
+Unseen16 Group 2
+```bash
+bash eval_robocasa.sh client \
+  --task_groups "WashFruitColander,MakeIceLemonade;PortionHotDogs,PanTransfer;HeatKebabSandwich,CategorizeCondiments;SeparateFreezerRack,GatherTableware" \
+  --server_url http://127.0.0.1:7891 \
+  --split pretrain \
+  --replan_steps 48 \
+  --num_trials 50 \
+  --save_video_every 0 \
+  --run_name robocasa365_eval_unseen2
+```
+
+The client automatically resumes from its log when the same `--run_name` is used again. Logs are saved to:
+`third_party/RoboCasa365/logs/eval/<run_name>.log`. Evaluation videos and summary results are saved under:
+`third_party/RoboCasa365/eval_videos`
 
 <a id="robochallenge-evaluation"></a>
 
