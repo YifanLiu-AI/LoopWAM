@@ -18,12 +18,10 @@ The LoopWAM **policy server** stays in `experiments/robocasa/serve_robocasa_poli
 ## One-time asset links
 
 ```bash
-ASSET_SRC_ROOT=/path/to/robocasa_assets \
-ROBOSUITE_ASSET_SRC=/path/to/robosuite/robosuite/models/assets \
-  bash third_party/RoboCasa365/setup_symlinks.sh
+  ROBOCASA_ASSETS_SRC=/path/to/robocasa_assets \
+  ROBOSUITE_ASSETS_SRC=/path/to/robosuite_assets \
+  bash eval_robocasa.sh prepare
 ```
-
-`ASSET_SRC_ROOT` must contain `fixtures/`, `objects/`, `textures/`, and `generative_textures/`.
 
 ## Run (via repo root)
 
@@ -32,9 +30,11 @@ ROBOSUITE_ASSET_SRC=/path/to/robosuite/robosuite/models/assets \
 bash scripts/download_robocasa365.sh
 
 # 2) Start the policy server
+conda activate loopwam
 bash eval_robocasa.sh serve
 
-# 3) In an env with mujoco / gymnasium, run the client
+# 3) Start the policy client
+conda activate robocasa365
 bash eval_robocasa.sh client \
   --server_url http://127.0.0.1:7891 \
   --task_groups "RecycleBottlesByType,WaffleReheat;\
