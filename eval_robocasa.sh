@@ -6,7 +6,7 @@
 # experiments/robocasa/ are left unchanged and remain usable.
 #
 #   bash scripts/download_robocasa365.sh
-#   ASSET_SRC_ROOT=... ROBOSUITE_ASSET_SRC=... bash eval_robocasa.sh prepare
+#   ROBOCASA_ASSETS_SRC=... ROBOSUITE_ASSETS_SRC=... bash eval_robocasa.sh prepare
 #   bash eval_robocasa.sh serve
 #   bash eval_robocasa.sh client --server_url http://HOST:7891 --task_groups "..." ...
 #
@@ -31,13 +31,17 @@ Usage:
   bash eval_robocasa.sh client --server_url http://HOST:7891 [client args...]
 
 prepare requires:
+  ROBOCASA_ASSETS_SRC=/path/to/robocasa_assets
+  ROBOSUITE_ASSETS_SRC=/path/to/robosuite/robosuite/models/assets
+
+Legacy variable names still work:
   ASSET_SRC_ROOT=/path/to/robocasa_assets
   ROBOSUITE_ASSET_SRC=/path/to/robosuite/robosuite/models/assets
 EOF
 }
 
 cmd_prepare() {
-  if [[ ! -x "${ROBOCASA365_ROOT}/setup_symlinks.sh" ]]; then
+  if [[ ! -f "${ROBOCASA365_ROOT}/setup_symlinks.sh" ]]; then
     echo "[eval_robocasa] missing ${ROBOCASA365_ROOT}/setup_symlinks.sh" >&2
     exit 1
   fi
@@ -86,8 +90,9 @@ cmd_client() {
     echo "[eval_robocasa] missing client launcher: ${launcher}" >&2
     exit 1
   fi
-  if [[ ! -e "${ROBOCASA365_ROOT}/robosuite/robosuite/models/assets" ]]; then
-    echo "[eval_robocasa] robosuite assets not linked; run: bash eval_robocasa.sh prepare" >&2
+  if [[ ! -e "${ROBOCASA365_ROOT}/robosuite/robosuite/models/assets/robots/panda/robot.xml" ]]; then
+    echo "[eval_robocasa] robosuite assets not linked or invalid; run: bash eval_robocasa.sh prepare" >&2
+    echo "  Expected: ${ROBOCASA365_ROOT}/robosuite/robosuite/models/assets/robots/panda/robot.xml" >&2
     exit 1
   fi
   for name in fixtures objects textures generative_textures; do
