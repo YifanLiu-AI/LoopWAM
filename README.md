@@ -261,6 +261,48 @@ bash scripts/run.sh arx5
 bash scripts/run.sh ur5
 ```
 
+### 🤖 Robocasa365
+
+Expert demonstrations can be downloaded from [the official RoboCasa dataset documentation](https://robocasa.ai/docs/build/html/datasets/using_datasets.html), and we provide [the three rollout datasets](https://huggingface.co/datasets/loop-wam/loopwam/tree/main/data/robocasa365-ours) used in our training pipeline.
+
+Before training, you should regenerate the data configuration file based on the locations where you store these rollout datasets. The existing configuration file `configs/data/robocasa365_mq_3rollout.yaml` keeps the original training paths and is provided as a reference for the remaining configuration parameters. You can generate an updated data configuration with:
+
+```bash
+python scripts/robocasa365_dataconfig_gen.py \
+  --base-config configs/data/robocasa365_mq_3rollout.yaml \
+  --rollout-source root=/path/to/rldx_rollout,success=2,failure=1,mode=success_only \
+  --rollout-source root=/path/to/loopwam_round1_rollout,success=3,failure=1,mode=success_only \
+  --rollout-source root=/path/to/loopwam_round2_rollout_part2,success=4,failure=1,mode=success_only \
+  --rollout-source root=/path/to/loopwam_round2_rollout_part1,success=4,failure=1,mode=success_only \
+  --failure-source-index 3 \
+  --expert-score 5 \
+  --out configs/data/robocasa365_mq_3rollout.yaml \
+  --pretrained-norm-stats null \
+  --text-embedding-cache-root /path/to/embedded_text
+```
+
+Before the first training run, cache the umT5 text embeddings for the RoboCasa365 task prompts:
+```bash
+python scripts/precompute_text_embeds.py \
+  task=robocasa365_join_mq_3rollout
+```
+
+In addition, we also provide reference scripts for collecting rollout data on the RoboCasa365 benchmark under `rollout_collect/robocasa365_rollout`. These scripts demonstrate how to collect rollouts using our LoopWAM model. After launching a server that hosts the LoopWAM policy model (described in the evaluation section), you can start a rollout collection client with the following command:
+```bash
+bash client_rollout_p.sh \
+  --task_set pretrain_composite1 \
+  --parallel_clients 4 \
+  --server_url http://127.0.0.1:7891 \
+  --split pretrain \
+  --num_trials 50 \
+  --seed 111111 \
+  --save_video_every 0 \
+  --replan_steps 48 \
+  --rollout_root /path/to/your/rolloutdata \
+  --run_name loopwam_rollout_composite1
+```
+Please note that some path arguments in the provided scripts may need to be updated according to your local environment.
+
 <a id="training"></a>
 
 ## 🚀 Training
