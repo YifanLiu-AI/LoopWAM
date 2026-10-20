@@ -13,7 +13,7 @@
   <a href="https://arxiv.org/pdf/2610.18873"><img src="assets/readme/arxiv.svg" alt="Read the paper on arXiv" width="112" height="40"></a>
   &nbsp;
   <a href="https://huggingface.co/datasets/loop-wam/loopwam"><img src="assets/readme/huggingface.svg" alt="Hugging Face" width="168" height="40"></a>
-</p>·d
+</p>
 
 <p align="center">
   <img src="assets/01_teaser_渐变优化版.gif" alt="LoopWAM self-improvement loop: deploy, collect mixed-quality rollouts, and improve through quality-aware learning." width="820">
