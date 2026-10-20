@@ -265,7 +265,7 @@ bash scripts/run.sh ur5
 
 Expert demonstrations can be downloaded from [the official RoboCasa dataset documentation](https://robocasa.ai/docs/build/html/datasets/using_datasets.html), and we provide [the three rollout datasets](https://huggingface.co/datasets/loop-wam/loopwam/tree/main/data/robocasa365-ours) used in our training pipeline.
 
-Before training, you should regenerate the data configuration file based on the locations where you store these rollout datasets. The existing configuration file `configs/data/robocasa365_mq_3rollout.yaml` keeps the original training paths and is provided as a reference for the remaining configuration parameters. You can generate an updated data configuration with:
+Before training, you should regenerate the data configuration file based on the locations where you store these rollout datasets. The existing configuration file `configs/data/robocasa365_mq_3rollout.yaml` keeps the original training paths and is provided as a reference for the remaining configuration parameters. Update data configuration with:
 
 ```bash
 python scripts/robocasa365_dataconfig_gen.py \
@@ -287,7 +287,7 @@ python scripts/precompute_text_embeds.py \
   task=robocasa365_join_mq_3rollout
 ```
 
-In addition, we also provide reference scripts for collecting rollout data on the RoboCasa365 benchmark under `rollout_collect/robocasa365_rollout`. These scripts demonstrate how to collect rollouts using our LoopWAM model. After launching a server that hosts the LoopWAM policy model (described in the evaluation section), you can start a rollout collection client with the following command:
+In addition, we also provide reference scripts for collecting rollout data on the RoboCasa365 benchmark under `rollout_collect/robocasa365_rollout`. These scripts demonstrate how to collect rollouts using our LoopWAM model. After launching a server that hosts the LoopWAM policy model (see `Section: Evaluation`), you can start a rollout collection client with the following command:
 ```bash
 bash client_rollout_p.sh \
   --task_set pretrain_composite1 \
