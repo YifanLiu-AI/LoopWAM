@@ -1,52 +1,3 @@
-'''
-
-python playground/dm05/eval/eval_robocasa_client.py \
-  --tasks OpenDrawer,CloseFridge,NavigateKitchen,CloseBlenderLid,TurnSinkSpout,AddLemonToFish,OrganizeVegetables,PortionYogurt,BowlAndCup,PackIdenticalLunches \
-  --server_url http://127.0.0.1:7891 \
-  --split pretrain \
-  --num_trials 50 \
-  --save_video_every 10
-
-nohup torchrun --nproc_per_node=1 playground/dm05/sft/dm05_sft_robocasa.py \
-    --task inference \
-    --model_name_or_path user_checkpoints/dm05_sft/dm05_sft_0630/checkpoint-14000 \
-    --port 7891 \
-    > server.log 2>&1 &
-
-
-
-nohup python playground/dm05/eval/eval_robocasa_client.py \
-  --tasks OpenDrawer,CloseFridge,NavigateKitchen,CloseBlenderLid,TurnSinkSpout,AddLemonToFish,OrganizeVegetables,PortionYogurt,BowlAndCup,PackIdenticalLunches \
-  --server_url http://127.0.0.1:7891 \
-  --split pretrain \
-  --num_trials 50 \
-  --save_video_every 10 \
-  > eval.log 2>&1 &
-
-
-
-python playground/dm05/eval/eval_robocasa_client.py \
-  --task_set target_atomic18 \
-  --server_url http://127.0.0.1:7891 \
-  --split pretrain \
-  --num_trials 50 \
-  --save_video_every 10
-
-
-
-python playground/dm05/eval/eval_robocasa_client.py \
-  --task_set target_all50 \
-  --server_url http://127.0.0.1:7891 \
-  --split pretrain \
-  --num_trials 50 \
-  --save_video_every 20
-
-
-
-'''
-
-
-
 import argparse
 import collections
 import io
@@ -143,6 +94,13 @@ TASK_SUBSET_BY_NAME = {
     **{task: "composite_seen16" for task in TARGET_COMPOSITE_SEEN16_TASKS},
     **{task: "composite_unseen16" for task in TARGET_COMPOSITE_UNSEEN16_TASKS},
 }
+
+# RoboCasa365 leaderboard default is RoboCasa 1.0.1, whose target-task
+# evaluation uses 1.5x longer horizons than the bundled RoboCasa 1.0.0 registry.
+# Keep this as a multiplier instead of hard-coding 50 task horizons so the client
+# remains compatible with all task names present in the registry. Pass
+# --horizon_multiplier 1.0 to reproduce the old RoboCasa 1.0.0 shorter horizon.
+DEFAULT_HORIZON_MULTIPLIER = 1.5
 
 
 class DM05InferenceClient:
@@ -528,6 +486,7 @@ def evaluate(
     inference_retries=5,
     inference_timeout=60,
     inference_retry_backoff=2.0,
+    horizon_multiplier=DEFAULT_HORIZON_MULTIPLIER,
     resume=True,
 ):
     import gymnasium as gym
@@ -540,7 +499,10 @@ def evaluate(
         run_name = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     if max_steps is None:
-        max_steps = get_task_horizon(task_name)
+        base_max_steps = int(get_task_horizon(task_name))
+        max_steps = int(round(base_max_steps * float(horizon_multiplier)))
+    else:
+        max_steps = int(max_steps)
 
     output_dir = os.path.join(video_dir, run_name, task_name)
     ensure_dir(output_dir)
@@ -584,6 +546,7 @@ def evaluate(
             "robot_type": robot_type,
             "seed": seed,
             "replan_steps": replan_steps,
+            "horizon_multiplier": horizon_multiplier,
             "max_steps": max_steps,
             "save_video_every": save_video_every,
             "run_name": run_name,
@@ -736,6 +699,7 @@ def evaluate(
         "robot_type": robot_type,
         "seed": seed,
         "replan_steps": replan_steps,
+        "horizon_multiplier": horizon_multiplier,
         "max_steps": max_steps,
         "save_video_every": save_video_every,
         "run_name": run_name,
@@ -777,6 +741,7 @@ def evaluate_task_set(
     inference_retries=5,
     inference_timeout=60,
     inference_retry_backoff=2.0,
+    horizon_multiplier=DEFAULT_HORIZON_MULTIPLIER,
     resume=True,
 ):
     if run_name is None:
@@ -808,6 +773,7 @@ def evaluate_task_set(
             inference_retries=inference_retries,
             inference_timeout=inference_timeout,
             inference_retry_backoff=inference_retry_backoff,
+            horizon_multiplier=horizon_multiplier,
             resume=resume,
         )
         stats["task_subset"] = TASK_SUBSET_BY_NAME.get(task_name, "custom")
@@ -844,6 +810,7 @@ def evaluate_task_set(
         "robot_type": robot_type,
         "seed": seed,
         "replan_steps": replan_steps,
+        "horizon_multiplier": horizon_multiplier,
         "max_steps": max_steps,
         "save_video_every": save_video_every,
         "run_name": run_name,
@@ -982,6 +949,16 @@ def parse_args():
         help="Optional run name; default is timestamp",
     )
     parser.add_argument(
+        "--horizon_multiplier",
+        type=float,
+        default=DEFAULT_HORIZON_MULTIPLIER,
+        help=(
+            "Multiplier applied to RoboCasa registry horizons when --max_steps is not set. "
+            "Default 1.5 matches the official RoboCasa365 leaderboard / RoboCasa 1.0.1 "
+            "longer-horizon protocol; use 1.0 for the bundled RoboCasa 1.0.0 shorter horizons."
+        ),
+    )
+    parser.add_argument(
         "--no_resume",
         action="store_true",
         help="Disable automatic resume from existing episode_results.jsonl",
@@ -1016,6 +993,7 @@ def main():
             inference_retries=args.inference_retries,
             inference_timeout=args.inference_timeout,
             inference_retry_backoff=args.inference_retry_backoff,
+            horizon_multiplier=args.horizon_multiplier,
             resume=not args.no_resume,
         )
     elif args.tasks is not None:
@@ -1035,6 +1013,7 @@ def main():
             inference_retries=args.inference_retries,
             inference_timeout=args.inference_timeout,
             inference_retry_backoff=args.inference_retry_backoff,
+            horizon_multiplier=args.horizon_multiplier,
             resume=not args.no_resume,
         )
     else:
@@ -1054,6 +1033,7 @@ def main():
             inference_retries=args.inference_retries,
             inference_timeout=args.inference_timeout,
             inference_retry_backoff=args.inference_retry_backoff,
+            horizon_multiplier=args.horizon_multiplier,
             resume=not args.no_resume,
         )
 
