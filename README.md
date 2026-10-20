@@ -287,7 +287,7 @@ python scripts/precompute_text_embeds.py \
   task=robocasa365_join_mq_3rollout
 ```
 
-In addition, we also provide reference scripts for collecting rollout data on the RoboCasa365 benchmark under `rollout_collect/robocasa365_rollout`. These scripts demonstrate how to collect rollouts using our LoopWAM model. After launching a server that hosts the LoopWAM policy model (see `Section: Evaluation`), you can start a rollout collection client with the following command:
+In addition, we also provide reference scripts for collecting rollout data on the RoboCasa365 benchmark under `rollout_collect/robocasa365_rollout`. These scripts demonstrate how to collect rollouts using our LoopWAM model. After launching a server that hosts the LoopWAM policy model (see `Section: Robocasa365 evaluation`), you can start a rollout collection client with the following command:
 ```bash
 bash client_rollout_p.sh \
   --task_set pretrain_composite1 \
@@ -298,7 +298,7 @@ bash client_rollout_p.sh \
   --seed 111111 \
   --save_video_every 0 \
   --replan_steps 48 \
-  --rollout_root /path/to/your/rolloutdata \
+  --rollout_root /path/to/your/rollout \
   --run_name loopwam_rollout_composite1
 ```
 Please note that some path arguments in the provided scripts may need to be updated according to your local environment.
