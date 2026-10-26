@@ -2,7 +2,7 @@
 
 defaults:
   - train
-  - override /task: robotwin_quality_score_3low_1cam_stitched_384_1e-4_action_weighted
+  - override /task: robotwin
   - _self_
 
 ckpt: null
@@ -31,7 +31,7 @@ EVALUATION:
   sigma_shift: null
   text_cfg_scale: 1.0
   negative_prompt: ""
-  # null = no suffix (robotwin_uncond, etc.); "high" / "low" for quality-trained checkpoints
+  # null = no suffix; "high" / "low" for quality-trained checkpoints
   prompt_quality_suffix: null
   # null = no numeric score; 1-5 for quality-score-trained checkpoints (overrides suffix when set)
   prompt_quality_score: null

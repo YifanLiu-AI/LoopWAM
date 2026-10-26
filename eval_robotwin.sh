@@ -20,7 +20,7 @@ cd "${ROOT}"
 
 CKPT="${CKPT:-${ROOT}/checkpoints/robotwin/step_037645.pt}"
 STATS="${STATS:-${ROOT}/checkpoints/robotwin/dataset_stats.json}"
-TASK="${FASTWAM_TASK:-robotwin_quality_score_3low_1cam_stitched_384_1e-4_action_weighted}"
+TASK="${FASTWAM_TASK:-robotwin}"
 NUM_GPUS="${NUM_GPUS:-8}"
 GPU_START="${GPU_START:-0}"
 MAX_TASKS_PER_GPU="${MAX_TASKS_PER_GPU:-2}"

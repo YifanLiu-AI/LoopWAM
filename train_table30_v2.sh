@@ -18,25 +18,20 @@ fi
 shift
 
 case "${ROBOT}" in
-  ur5)
-    TASK="ur5_rollout_subtask_delta"
-    ;;
-  aloha)
-    TASK="aloha_rollout_delta_nopackpen"
-    export FASTWAM_EXCLUDE_RAW_PREFIXES="${FASTWAM_EXCLUDE_RAW_PREFIXES:-pack_the_items/,pack_the_toothbrush_holder/,put_the_pencil_case_into_the_schoolbag/}"
-    ;;
-  arx5)
-    TASK="arx5_newrollout_subtask_delta"
-    ;;
-  w1)
-    TASK="w1_rollout_nofoldlace_delta"
-    export FASTWAM_EXCLUDE_RAW_PREFIXES="${FASTWAM_EXCLUDE_RAW_PREFIXES:-fold_the_clothes/,untie_the_shoelaces/}"
+  ur5|aloha|arx5|w1)
+    TASK="${ROBOT}"
     ;;
   *)
     echo "Unknown robot '${ROBOT}'. Use ur5, aloha, arx5, or w1." >&2
     exit 1
     ;;
 esac
+
+if [[ "${ROBOT}" == "aloha" ]]; then
+  export FASTWAM_EXCLUDE_RAW_PREFIXES="${FASTWAM_EXCLUDE_RAW_PREFIXES:-pack_the_items/,pack_the_toothbrush_holder/,put_the_pencil_case_into_the_schoolbag/}"
+elif [[ "${ROBOT}" == "w1" ]]; then
+  export FASTWAM_EXCLUDE_RAW_PREFIXES="${FASTWAM_EXCLUDE_RAW_PREFIXES:-fold_the_clothes/,untie_the_shoelaces/}"
+fi
 
 export RUN_ID="${RUN_ID:-${TASK}}"
 export FASTWAM_TASK="${FASTWAM_TASK:-${TASK}}"

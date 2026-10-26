@@ -7,7 +7,7 @@
 #
 # Env:
 #   RUN_ID / FASTWAM_RUN_ID   Stable run name (required for resume across preemption)
-#   FASTWAM_TASK              Hydra task (default: robotwin_uncond_3cam_384_1e-4)
+#   FASTWAM_TASK              Hydra task (default: robotwin)
 #   FASTWAM_NPROC_PER_NODE    GPUs per node (default: 8)
 #   AUTO_RESUME               1 = auto pick latest checkpoint (default), 0 = always fresh
 #   RESUME                    Explicit state dir (overrides AUTO_RESUME), e.g. ./runs/.../checkpoints/state/step_002500
@@ -26,7 +26,7 @@ cd "${REPO_ROOT}"
 export DIFFSYNTH_MODEL_BASE_PATH="${DIFFSYNTH_MODEL_BASE_PATH:-${REPO_ROOT}/checkpoints}"
 export PYTHONPATH="${REPO_ROOT}/src:${PYTHONPATH:-}"
 
-FASTWAM_TASK="${FASTWAM_TASK:-robotwin_joint_mixed_3cam_384_1e-4}"
+FASTWAM_TASK="${FASTWAM_TASK:-robotwin}"
 NPROC_PER_NODE="${FASTWAM_NPROC_PER_NODE:-8}"
 AUTO_RESUME="${AUTO_RESUME:-1}"
 

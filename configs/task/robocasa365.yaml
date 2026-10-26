@@ -20,7 +20,7 @@
 #   NPROC_PER_NODE=16 bash train_robocasa365.sh
 
 defaults:
-  - override /data: robocasa365_mq_3rollout
+  - override /data: robocasa365
   - override /model: fastwam_joint_mixed_quality_weighted_custom
   - _self_
 

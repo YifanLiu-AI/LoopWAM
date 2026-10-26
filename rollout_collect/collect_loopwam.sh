@@ -37,7 +37,7 @@ exec python "$SCRIPT_DIR/collect.py" \
   --num-episodes "${EVAL_NUM_EPISODES:-20}" \
   --seed "${SEED:-76}" \
   --gpu "${GPU:-0}" \
-  --sim-task "${SIM_TASK:-robotwin_uncond_3cam_384_1e-4}" \
+  --sim-task "${SIM_TASK:-robotwin}" \
   --replan-steps "${REPLAN_STEPS:-24}" \
   --mixed-precision "${MIXED_PRECISION:-bf16}" \
   --device "${DEVICE:-cuda}" \

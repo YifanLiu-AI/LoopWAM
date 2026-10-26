@@ -2,10 +2,11 @@
 #
 # Joint LoopWAM + mixed-quality training with quality-weighted action supervision.
 # Run (example):
-#   python scripts/train.py task=robotwin_quality_score_3low_1cam_stitched_384_1e-4_action_weighted
+#   python scripts/train.py task=robotwin
+#   bash train_robotwin_loopwam.sh
 
 defaults:
-  - override /data: robotwin_mixed_quality_score_3low_stitched
+  - override /data: robotwin
   - override /model: fastwam_joint_mixed_quality_weighted
   - _self_
 

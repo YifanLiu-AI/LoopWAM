@@ -234,11 +234,11 @@ Before the first training run, cache umT5 embeddings for the task prompts:
 
 ```bash
 python scripts/precompute_text_embeds.py \
-  task=robotwin_quality_score_3low_1cam_stitched_384_1e-4_action_weighted
+  task=robotwin
 
 # or several GPUs
 python scripts/precompute_text_embeds_multigpu.py \
-  task=robotwin_quality_score_3low_1cam_stitched_384_1e-4_action_weighted \
+  task=robotwin \
   +processes_per_gpu=4 +overwrite=false
 ```
 
@@ -265,18 +265,18 @@ bash scripts/run.sh ur5
 
 Expert demonstrations can be downloaded from [the official RoboCasa dataset documentation](https://robocasa.ai/docs/build/html/datasets/using_datasets.html), and we provide [the three rollout datasets](https://huggingface.co/datasets/loop-wam/loopwam/tree/main/data/robocasa365-ours) used in our training pipeline.
 
-Before training, you should regenerate the data configuration file based on the locations where you store these rollout datasets. The existing configuration file `configs/data/robocasa365_mq_3rollout.yaml` keeps the original training paths and is provided as a reference for the remaining configuration parameters. Update data configuration with:
+Before training, you should regenerate the data configuration file based on the locations where you store these rollout datasets. The existing configuration file `configs/data/robocasa365.yaml` keeps the original training paths and is provided as a reference for the remaining configuration parameters. Update data configuration with:
 
 ```bash
 python scripts/robocasa365_dataconfig_gen.py \
-  --base-config configs/data/robocasa365_mq_3rollout.yaml \
+  --base-config configs/data/robocasa365.yaml \
   --rollout-source root=/path/to/rldx_rollout,success=2,failure=1,mode=success_only \
   --rollout-source root=/path/to/loopwam_round1_rollout,success=3,failure=1,mode=success_only \
   --rollout-source root=/path/to/loopwam_round2_rollout_part2,success=4,failure=1,mode=success_only \
   --rollout-source root=/path/to/loopwam_round2_rollout_part1,success=4,failure=1,mode=success_only \
   --failure-source-index 3 \
   --expert-score 5 \
-  --out configs/data/robocasa365_mq_3rollout.yaml \
+  --out configs/data/robocasa365.yaml \
   --pretrained-norm-stats null \
   --text-embedding-cache-root /path/to/embedded_text
 ```
@@ -284,7 +284,7 @@ python scripts/robocasa365_dataconfig_gen.py \
 Before the first training run, cache the umT5 text embeddings for the RoboCasa365 task prompts:
 ```bash
 python scripts/precompute_text_embeds.py \
-  task=robocasa365_join_mq_3rollout
+  task=robocasa365
 ```
 
 In addition, we also provide reference scripts for collecting rollout data on the RoboCasa365 benchmark under `rollout_collect/robocasa365_rollout`. These scripts demonstrate how to collect rollouts using our LoopWAM model. After launching a server that hosts the LoopWAM policy model (see `Section: Robocasa365 evaluation`), you can start a rollout collection client with the following command:
@@ -389,7 +389,7 @@ Results are saved under `evaluate_results/robotwin/`. Each run contains `summary
 
 RoboCasa365 is split across two processes. This repository serves the policy over HTTP. The simulator client lives under `third_party/RoboCasa365` (`robocasa` + `robosuite`); mesh assets are linked via soft links.
 
-The server reuses `task=robocasa365_join_mq_3rollout`, so the camera stitching, 11-dimensional action space, and 14-dimensional state representation are consistent with training. The configuration file `configs/sim_robocasa.yaml` loads the Wan2.2 text encoder and skips fresh ActionDiT initialization; the trained `.pt` checkpoint provides the model weights.
+The server reuses `task=robocasa365`, so the camera stitching, 11-dimensional action space, and 14-dimensional state representation are consistent with training. The configuration file `configs/sim_robocasa.yaml` loads the Wan2.2 text encoder and skips fresh ActionDiT initialization; the trained `.pt` checkpoint provides the model weights.
 
 If the text encoder and the released RoboCasa365 checkpoint are not already available under `checkpoints/`, download them with:
 

@@ -11,7 +11,7 @@
 #   bash train_table30_v2.sh arx5 8
 
 defaults:
-  - override /data: arx5_newrollout_subtask_delta
+  - override /data: arx5
   - override /model: fastwam_joint_mixed_quality_weighted
   - _self_
 

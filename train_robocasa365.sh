@@ -15,7 +15,7 @@ cd "${REPO_ROOT}"
 
 export PYTHONPATH="${REPO_ROOT}/src:${PYTHONPATH:-}"
 
-FASTWAM_TASK="${FASTWAM_TASK:-robocasa365_join_mq_3rollout}"
+FASTWAM_TASK="${FASTWAM_TASK:-robocasa365}"
 EXTRA_ARGS_STR="${EXTRA_ARGS:-log_every=5 save_every=2500}"
 
 if [[ -n "${NPROC_PER_NODE:-}" ]]; then
@@ -34,7 +34,7 @@ export MASTER_ADDR="${MASTER_ADDR:-127.0.0.1}"
 export MASTER_PORT="${MASTER_PORT:-29500}"
 
 export FASTWAM_TASK
-export RUN_ID="${RUN_ID:-robocasa365_join_mq_3rollout}"
+export RUN_ID="${RUN_ID:-robocasa365}"
 
 MY_LOG_DIR="${REPO_ROOT}/logs"
 mkdir -p "${MY_LOG_DIR}"

@@ -49,7 +49,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint-id", type=int, default=2000)
     parser.add_argument("--pi0-step", type=int, default=50)
 
-    parser.add_argument("--sim-task", default="robotwin_uncond_3cam_384_1e-4")
+    parser.add_argument("--sim-task", default="robotwin")
     parser.add_argument("--replan-steps", type=int, default=24)
     parser.add_argument("--num-inference-steps", type=int, default=None)
     parser.add_argument("--action-horizon", type=int, default=None)

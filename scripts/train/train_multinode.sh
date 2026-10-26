@@ -108,7 +108,7 @@ if [[ $# -gt 0 && "${1:-}" =~ ^[0-9]+$ ]]; then
 fi
 EXTRA_ARGS=("$@")
 
-FASTWAM_TASK="${FASTWAM_TASK:-robotwin_joint_mixed_3cam_384_1e-4}"
+FASTWAM_TASK="${FASTWAM_TASK:-robotwin}"
 AUTO_RESUME="${AUTO_RESUME:-1}"
 
 TASK_CFG="${FASTWAM_TASK#task=}"

@@ -13,7 +13,7 @@
 
 defaults:
   - train
-  - override /task: robocasa365_join_mq_3rollout
+  - override /task: robocasa365
   - _self_
 
 ckpt: null

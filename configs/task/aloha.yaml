@@ -1,13 +1,13 @@
 # @package _global_
 #
-# Train the UR5 checkpoint released as
-#   checkpoints/ur5_rollout_subtask_delta/step_029925.pt
+# Train the Aloha checkpoint released as
+#   checkpoints/aloha_rollout_delta_nopackpen/step_061320.pt
 #
-#   bash train_table30_v2.sh ur5
-#   bash train_table30_v2.sh ur5 8
+#   bash train_table30_v2.sh aloha
+#   bash train_table30_v2.sh aloha 8
 
 defaults:
-  - override /data: ur5_rollout_subtask_delta
+  - override /data: aloha
   - override /model: fastwam_joint_mixed_quality_weighted
   - _self_
 

@@ -14,7 +14,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${SCRIPT_DIR}"
 
 export RUN_ID="${RUN_ID:-ours_quality_score_3low_96_actweight_nostate_future}"
-export FASTWAM_TASK="${FASTWAM_TASK:-robotwin_quality_score_3low_1cam_stitched_384_1e-4_action_weighted}"
+export FASTWAM_TASK="${FASTWAM_TASK:-robotwin}"
 export OUTPUT_DIR="${OUTPUT_DIR:-${SCRIPT_DIR}/runs/${FASTWAM_TASK}/${RUN_ID}}"
 export DIFFSYNTH_MODEL_BASE_PATH="${DIFFSYNTH_MODEL_BASE_PATH:-${SCRIPT_DIR}/checkpoints}"
 export DIFFSYNTH_SKIP_DOWNLOAD="${DIFFSYNTH_SKIP_DOWNLOAD:-true}"

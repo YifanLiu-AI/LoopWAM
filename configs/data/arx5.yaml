@@ -1,15 +1,15 @@
-# Aloha mixed-quality training for aloha_rollout_delta_nopackpen.
-# Expert table30 (score 12, action supervised) + rcv2 (per-episode score, weak branch).
+# ARX5 mixed-quality training (task=arx5).
+# Matches the resolved run config whose dataset_stats.json is byte-identical
+# to checkpoints/arx5_newrollout_subtask_delta/dataset_stats.json.
 # Action is chunk-relative joint on all 14 dims.
-# Norm stats match checkpoints/aloha_rollout_delta_nopackpen/dataset_stats.json
-# (dataset_stats_relative_joint_no_pack_pencil.json).
-# Launch script drops pack_the_items, pack_the_toothbrush_holder, and pencil-case episodes.
-# stamp_positioning prompts are switched in scripts/train.py.
+# press_the_button and water_the_flowers prompts are switched in scripts/train.py.
+# The original run also set skip_stillness_as_possible; current wa_ali has no
+# stillness sampler, so this launch does not filter still frames.
 train:
   _target_: fastwam.datasets.lerobot.robot_video_dataset.RobotVideoDataset
   dataset_dirs:
-    - ./converted_data/table30-rc_aloha_10-lerobot_stitched
-    - ./converted_data/rcv2-rc_aloha_10-lerobot_stitched
+    - ./converted_data/table30-rc_arx5_5-lerobot_stitched
+    - ./converted_data/rcv2-rc_arx5_5-lerobot_stitched
   dataset_supervise_action:
     - true
     - false
@@ -37,7 +37,7 @@ train:
   camera_key: null
   val_set_proportion: 0.01
   is_training_set: true
-  pretrained_norm_stats: ./converted_data/table30-rc_aloha_10-lerobot_stitched/dataset_stats_relative_joint_no_pack_pencil.json
+  pretrained_norm_stats: ./converted_data/table30-rc_arx5_5-lerobot_stitched/dataset_stats_relative_joint.json
   skip_padding_as_possible: false
   concat_multi_camera: null
   processor:
@@ -65,14 +65,14 @@ train:
       - _target_: torchvision.transforms.Resize
         size: [384, 320]
   text_embedding_cache_dir:
-    - ./converted_data/table30-rc_aloha_10-lerobot_stitched/text_embeds_cache_quality_score
-    - ./converted_data/rcv2-rc_aloha_10-lerobot_stitched/text_embeds_cache_quality_score
+    - ./converted_data/table30-rc_arx5_5-lerobot_stitched/text_embeds_cache_quality_score
+    - ./converted_data/rcv2-rc_arx5_5-lerobot_stitched/text_embeds_cache_quality_score
   context_len: 128
 
 val:
   _target_: fastwam.datasets.lerobot.robot_video_dataset.RobotVideoDataset
   dataset_dirs:
-    - ./converted_data/table30-rc_aloha_10-lerobot_stitched
+    - ./converted_data/table30-rc_arx5_5-lerobot_stitched
   dataset_prompt_quality_score:
     - 12
   shape_meta: ${data.train.shape_meta}
@@ -84,7 +84,7 @@ val:
   camera_key: null
   val_set_proportion: 0.01
   is_training_set: false
-  pretrained_norm_stats: ./converted_data/table30-rc_aloha_10-lerobot_stitched/dataset_stats_relative_joint_no_pack_pencil.json
+  pretrained_norm_stats: ./converted_data/table30-rc_arx5_5-lerobot_stitched/dataset_stats_relative_joint.json
   skip_padding_as_possible: false
   concat_multi_camera: null
   processor:
@@ -111,5 +111,5 @@ val:
       - _target_: fastwam.datasets.lerobot.transforms.image.ToTensor
       - _target_: torchvision.transforms.Resize
         size: [384, 320]
-  text_embedding_cache_dir: ./converted_data/table30-rc_aloha_10-lerobot_stitched/text_embeds_cache_quality_score
+  text_embedding_cache_dir: ./converted_data/table30-rc_arx5_5-lerobot_stitched/text_embeds_cache_quality_score
   context_len: 128

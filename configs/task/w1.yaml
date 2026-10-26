@@ -10,7 +10,7 @@
 #   bash train_table30_v2.sh w1 8
 
 defaults:
-  - override /data: w1_rollout_nofoldlace_delta
+  - override /data: w1
   - override /model: fastwam_joint_mixed
   - _self_
 
